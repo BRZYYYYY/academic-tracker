@@ -76,6 +76,8 @@ let selectedSubjects = new Set();
 // DOM Elements
 const loginView = document.getElementById('login-view');
 const appView = document.getElementById('app-view');
+const header = document.querySelector('.header');
+const mainContainer = document.querySelector('.main-container');
 const loginForm = document.getElementById('login-form');
 const signupForm = document.getElementById('signup-form');
 const loginCard = document.getElementById('login-card');
@@ -95,18 +97,25 @@ const signupConfirmPasswordInput = document.getElementById('signup-confirm-passw
 const dashboardView = document.getElementById('dashboard-view');
 const detailView = document.getElementById('detail-view');
 const subjectsGrid = document.getElementById('subjects-grid');
-const addSubjectBtn = document.getElementById('add-subject-btn');
-const manageSubjectsBtn = document.getElementById('manage-subjects-btn');
+const addSubjectBtn = document.getElementById('add-subject-header-btn');
+const removeSubjectBtn = document.getElementById('remove-subject-btn');
 const deleteSelectedBtn = document.getElementById('delete-selected-btn');
 const deleteSelectedBar = document.getElementById('delete-selected-bar');
 const selectedCount = document.getElementById('selected-count');
+const userAvatarBtn = document.getElementById('user-avatar-btn');
+const userDropdown = document.getElementById('user-dropdown');
+const dropdownUsername = document.getElementById('dropdown-username');
+const dropdownLogoutBtn = document.getElementById('dropdown-logout-btn');
+const emptyStateContainer = document.getElementById('empty-state');
 const backBtn = document.getElementById('back-btn');
 const subjectNameDisplay = document.getElementById('subject-name-display');
 const subjectMeanValue = document.getElementById('subject-mean-value');
 const addGradeBtn = document.getElementById('add-grade-btn');
 const gradeItemsContainer = document.getElementById('grade-items-container');
-const filterType = document.getElementById('filter-type');
-const filterMode = document.getElementById('filter-mode');
+const filterTypeHeader = document.getElementById('filter-type-header');
+const filterTypeMenu = document.getElementById('filter-type-menu');
+const filterModeHeader = document.getElementById('filter-mode-header');
+const filterModeMenu = document.getElementById('filter-mode-menu');
 
 // Modal Elements
 const subjectModal = document.getElementById('subject-modal');
@@ -204,7 +213,8 @@ function showLogin() {
 function showApp() {
     loginView.classList.remove('active');
     appView.style.display = 'block';
-    usernameDisplay.textContent = currentUsername || 'User';
+    dropdownUsername.textContent = currentUsername || 'User';
+    setupCustomFilters();
     loadSubjects();
 }
 
@@ -314,8 +324,20 @@ signupForm.addEventListener('submit', async (e) => {
 // Note: Signup/Login form toggle event listeners are attached in DOMContentLoaded
 // to ensure DOM elements are available
 
+// Avatar Dropdown Toggle
+function toggleAvatarDropdown() {
+    userDropdown.classList.toggle('hidden');
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', (e) => {
+    if (userAvatarBtn && userDropdown && !userAvatarBtn.contains(e.target) && !userDropdown.contains(e.target)) {
+        userDropdown.classList.add('hidden');
+    }
+});
+
 // Logout
-logoutBtn.addEventListener('click', async () => {
+dropdownLogoutBtn.addEventListener('click', async () => {
     if (supabase) {
         await supabase.auth.signOut();
     }
@@ -550,11 +572,97 @@ async function updateSubjectAverage(subjectId) {
 
 // UI Rendering
 
+// Grade Color Calculation with Neon Effects
+function calculateGradeColor(percentage) {
+    // Empty state - no grades yet
+    if (percentage === 0 || percentage === null || percentage === undefined) {
+        return {
+            text: '-',
+            color: '#999999',
+            glowColor: 'rgba(153, 153, 153, 0)',
+            className: 'grade-empty'
+        };
+    }
+
+    // Clamp percentage between 0 and 100
+    const grade = Math.max(0, Math.min(100, percentage));
+
+    // 100%: Neon Blue
+    if (grade === 100) {
+        return {
+            text: '100%',
+            color: '#00FFFF',
+            glowColor: 'rgba(0, 255, 255, 0.8)',
+            className: 'grade-neon-blue'
+        };
+    }
+
+    // 99%: Neon Green
+    if (grade === 99) {
+        return {
+            text: '99%',
+            color: '#39FF14',
+            glowColor: 'rgba(57, 255, 20, 0.8)',
+            className: 'grade-neon-green'
+        };
+    }
+
+    // 59% and below: Neon Red
+    if (grade <= 59) {
+        return {
+            text: `${grade.toFixed(1)}%`,
+            color: '#FF0040',
+            glowColor: 'rgba(255, 0, 64, 0.8)',
+            className: 'grade-neon-red'
+        };
+    }
+
+    // 60% to 98%: Gradient from Red to Green
+    // Linear interpolation between red and green
+    const ratio = (grade - 60) / (98 - 60); // 0 to 1
+    
+    // Red (255, 0, 64) to Green (57, 255, 20)
+    const red = Math.round(255 - (255 - 57) * ratio);
+    const green = Math.round(0 + 255 * ratio);
+    const blue = Math.round(64 - 64 * ratio);
+    
+    const color = `rgb(${red}, ${green}, ${blue})`;
+    const glowColor = `rgba(${red}, ${green}, ${blue}, 0.8)`;
+
+    return {
+        text: `${grade.toFixed(1)}%`,
+        color: color,
+        glowColor: glowColor,
+        className: 'grade-neon-gradient'
+    };
+}
+
+// Helper function to toggle navbar visibility
+function toggleNavbarVisibility(hide = false) {
+    if (header && mainContainer) {
+        if (hide) {
+            header.classList.add('navbar-hidden');
+            mainContainer.classList.add('navbar-hidden-offset');
+        } else {
+            header.classList.remove('navbar-hidden');
+            mainContainer.classList.remove('navbar-hidden-offset');
+        }
+    }
+}
+
 // Show Dashboard
 function showDashboard() {
     dashboardView.classList.add('active');
     detailView.classList.remove('active');
     currentSubjectId = null;
+    // Reset manage mode when going back to dashboard
+    if (manageMode) {
+        toggleManageMode();
+    }
+    // Show header action buttons
+    removeSubjectBtn.style.display = 'inline-flex';
+    addSubjectBtn.style.display = 'inline-flex';
+    userAvatarBtn.style.display = 'flex';
     loadSubjects();
 }
 
@@ -563,31 +671,38 @@ async function showSubjectDetail(subjectId) {
     currentSubjectId = subjectId;
     dashboardView.classList.remove('active');
     detailView.classList.add('active');
+    // Hide header action buttons
+    removeSubjectBtn.style.display = 'none';
+    addSubjectBtn.style.display = 'none';
+    userAvatarBtn.style.display = 'none';
     await renderSubjectDetail(subjectId);
 }
 
 // Render Subjects (Dashboard)
 function renderSubjects(subjects) {
+    // Show empty state if no subjects
     if (!subjects || subjects.length === 0) {
-        subjectsGrid.innerHTML = `
-            <div class="empty-state">
-                <p>No subjects yet. Click "Add Subject" to get started!</p>
-            </div>
-        `;
+        subjectsGrid.innerHTML = '';
+        emptyStateContainer.classList.remove('hidden');
         return;
     }
     
+    // Hide empty state and render subjects
+    emptyStateContainer.classList.add('hidden');
+    
     subjectsGrid.innerHTML = subjects.map(subject => {
         const mean = subject.current_average || 0;
+        const gradeInfo = calculateGradeColor(mean);
         const isManageMode = manageMode ? 'manage-mode' : '';
         const isSelected = selectedSubjects.has(subject.id);
+        const selectedClass = isSelected ? 'selected' : '';
         
         return `
-            <div class="subject-card ${isManageMode}" data-subject-id="${subject.id}">
+            <div class="subject-card ${isManageMode} ${selectedClass}" data-subject-id="${subject.id}">
                 ${manageMode ? `<input type="checkbox" class="subject-checkbox" data-subject-id="${subject.id}" ${isSelected ? 'checked' : ''}>` : ''}
                 <div class="subject-card-header">
                     <h3 class="subject-card-name">${escapeHtml(subject.name)}</h3>
-                    <div class="subject-card-mean">${mean.toFixed(1)}%</div>
+                    <div class="subject-card-mean ${gradeInfo.className}" style="color: ${gradeInfo.color};">${gradeInfo.text}</div>
                 </div>
                 <div class="subject-card-meta">
                     ${manageMode ? 'Click checkbox to select' : 'Click to view details'}
@@ -601,10 +716,14 @@ function renderSubjects(subjects) {
         document.querySelectorAll('.subject-checkbox').forEach(checkbox => {
             checkbox.addEventListener('change', (e) => {
                 const subjectId = checkbox.dataset.subjectId;
+                const card = document.querySelector(`[data-subject-id="${subjectId}"]`);
+                
                 if (checkbox.checked) {
                     selectedSubjects.add(subjectId);
+                    if (card) card.classList.add('selected');
                 } else {
                     selectedSubjects.delete(subjectId);
+                    if (card) card.classList.remove('selected');
                 }
                 updateSelectedCount();
             });
@@ -645,11 +764,19 @@ async function renderSubjectDetail(subjectId) {
 
         subjectNameDisplay.textContent = escapeHtml(subject.name);
         const mean = subject.current_average || 0;
-        subjectMeanValue.textContent = `${mean.toFixed(1)}%`;
+        const gradeInfo = calculateGradeColor(mean);
+        
+        subjectMeanValue.textContent = gradeInfo.text;
+        subjectMeanValue.style.color = gradeInfo.color;
+        subjectMeanValue.style.textShadow = '';
+        subjectMeanValue.className = `mean-value ${gradeInfo.className}`;
 
         // Load and render grades
         const grades = await loadGrades(subjectId);
         renderGradeItems(grades);
+        
+        // Highlight active filters
+        highlightActiveFilters();
     } catch (err) {
         console.error('Error in renderSubjectDetail:', err);
     }
@@ -773,8 +900,20 @@ function closeSubjectModal() {
 function openGradeModal() {
     gradeModal.classList.add('active');
     gradeForm.reset();
+    
+    // Reset modal filter selections
+    document.getElementById('grade-type-header').textContent = 'Type ↕';
+    document.getElementById('grade-mode-header').textContent = 'Mode ↕';
+    document.querySelectorAll('#grade-type-menu .modal-filter-item').forEach(item => item.classList.remove('active'));
+    document.querySelectorAll('#grade-mode-menu .modal-filter-item').forEach(item => item.classList.remove('active'));
+    document.getElementById('grade-type').value = '';
+    document.getElementById('grade-mode').value = '';
+    
     gradeTitleInput.focus();
     document.getElementById('grade-modal-title').textContent = 'Add New Grade Item';
+    
+    // Setup modal filter handlers
+    setupModalFilters();
 }
 
 function closeGradeModal() {
@@ -788,18 +927,18 @@ function toggleManageMode() {
     selectedSubjects.clear();
     
     if (manageMode) {
+        removeSubjectBtn.classList.add('active');
         deleteSelectedBar.classList.remove('hidden');
-        manageSubjectsBtn.textContent = 'Done Managing';
-        manageSubjectsBtn.classList.add('btn-danger');
-        manageSubjectsBtn.classList.remove('btn-secondary');
     } else {
+        removeSubjectBtn.classList.remove('active');
         deleteSelectedBar.classList.add('hidden');
-        manageSubjectsBtn.textContent = 'Manage Subjects';
-        manageSubjectsBtn.classList.remove('btn-danger');
-        manageSubjectsBtn.classList.add('btn-secondary');
     }
     
     loadSubjects();
+}
+
+function updateSelectedCount() {
+    selectedCount.textContent = `${selectedSubjects.size} selected`;
 }
 
 function updateSelectedCount() {
@@ -824,10 +963,8 @@ async function deleteSelectedSubjects() {
         
         selectedSubjects.clear();
         manageMode = false;
+        removeSubjectBtn.classList.remove('active');
         deleteSelectedBar.classList.add('hidden');
-        manageSubjectsBtn.textContent = 'Manage Subjects';
-        manageSubjectsBtn.classList.remove('btn-danger');
-        manageSubjectsBtn.classList.add('btn-secondary');
         loadSubjects();
     } catch (err) {
         console.error('Error deleting subjects:', err);
@@ -836,6 +973,9 @@ async function deleteSelectedSubjects() {
 }
 
 // Event Listeners
+
+// Avatar Dropdown Toggle
+userAvatarBtn.addEventListener('click', toggleAvatarDropdown);
 
 // Add Subject
 addSubjectBtn.addEventListener('click', openSubjectModal);
@@ -850,14 +990,14 @@ subjectForm.addEventListener('submit', async (e) => {
     }
 });
 
-// Back to Dashboard
-backBtn.addEventListener('click', showDashboard);
-
-// Manage Subjects Toggle
-manageSubjectsBtn.addEventListener('click', toggleManageMode);
+// Remove Subject (Manage Mode Toggle)
+removeSubjectBtn.addEventListener('click', toggleManageMode);
 
 // Delete Selected Subjects
 deleteSelectedBtn.addEventListener('click', deleteSelectedSubjects);
+
+// Back to Dashboard
+backBtn.addEventListener('click', showDashboard);
 
 // Add Grade Item
 addGradeBtn.addEventListener('click', () => {
@@ -887,20 +1027,167 @@ gradeForm.addEventListener('submit', async (e) => {
     }
 });
 
-// Filter Change Handlers
-filterType.addEventListener('change', (e) => {
-    currentTypeFilter = e.target.value;
-    if (currentSubjectId) {
-        renderSubjectDetail(currentSubjectId);
-    }
-});
+// Custom Filter Handlers
+function setupCustomFilters() {
+    // Close menus when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.custom-filter-group')) {
+            filterTypeMenu.classList.remove('active');
+            filterModeMenu.classList.remove('active');
+        }
+    });
 
-filterMode.addEventListener('change', (e) => {
-    currentModeFilter = e.target.value;
-    if (currentSubjectId) {
-        renderSubjectDetail(currentSubjectId);
-    }
-});
+    // Filter Type Header Toggle
+    filterTypeHeader.addEventListener('click', () => {
+        filterTypeMenu.classList.toggle('active');
+        filterModeMenu.classList.remove('active');
+    });
+
+    // Filter Type Items
+    document.querySelectorAll('#filter-type-menu .custom-filter-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            const value = item.dataset.value;
+            currentTypeFilter = value;
+            
+            // Update active state
+            document.querySelectorAll('#filter-type-menu .custom-filter-item').forEach(i => {
+                i.classList.remove('active');
+            });
+            item.classList.add('active');
+            
+            // Close menu and re-render
+            filterTypeMenu.classList.remove('active');
+            if (currentSubjectId) {
+                renderSubjectDetail(currentSubjectId);
+            }
+        });
+    });
+
+    // Filter Mode Header Toggle
+    filterModeHeader.addEventListener('click', () => {
+        filterModeMenu.classList.toggle('active');
+        filterTypeMenu.classList.remove('active');
+    });
+
+    // Filter Mode Items
+    document.querySelectorAll('#filter-mode-menu .custom-filter-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            const value = item.dataset.value;
+            currentModeFilter = value;
+            
+            // Update active state
+            document.querySelectorAll('#filter-mode-menu .custom-filter-item').forEach(i => {
+                i.classList.remove('active');
+            });
+            item.classList.add('active');
+            
+            // Close menu and re-render
+            filterModeMenu.classList.remove('active');
+            if (currentSubjectId) {
+                renderSubjectDetail(currentSubjectId);
+            }
+        });
+    });
+}
+
+// Initialize filter handlers when detail view loads
+function highlightActiveFilters() {
+    document.querySelectorAll('#filter-type-menu .custom-filter-item').forEach(item => {
+        if (item.dataset.value === currentTypeFilter) {
+            item.classList.add('active');
+        } else {
+            item.classList.remove('active');
+        }
+    });
+    
+    document.querySelectorAll('#filter-mode-menu .custom-filter-item').forEach(item => {
+        if (item.dataset.value === currentModeFilter) {
+            item.classList.add('active');
+        } else {
+            item.classList.remove('active');
+        }
+    });
+}
+
+// Setup Modal Filter Handlers (for Type and Mode in grade modal)
+function setupModalFilters() {
+    const gradeTypeHeader = document.getElementById('grade-type-header');
+    const gradeTypeMenu = document.getElementById('grade-type-menu');
+    const gradeModeHeader = document.getElementById('grade-mode-header');
+    const gradeModeMenu = document.getElementById('grade-mode-menu');
+    const gradeTypeInput = document.getElementById('grade-type');
+    const gradeModeInput = document.getElementById('grade-mode');
+
+    // Close menus when clicking outside
+    const closeModalMenus = (e) => {
+        if (!e.target.closest('.modal-filter-group')) {
+            gradeTypeMenu.classList.remove('active');
+            gradeModeMenu.classList.remove('active');
+        }
+    };
+
+    // Remove previous listeners to avoid duplicates
+    document.removeEventListener('click', closeModalMenus);
+    document.addEventListener('click', closeModalMenus);
+
+    // Grade Type Header Toggle
+    gradeTypeHeader.onclick = () => {
+        gradeTypeMenu.classList.toggle('active');
+        gradeModeMenu.classList.remove('active');
+    };
+
+    // Grade Type Items
+    document.querySelectorAll('#grade-type-menu .modal-filter-item').forEach(item => {
+        item.onclick = (e) => {
+            const value = item.dataset.value;
+            gradeTypeInput.value = value;
+            
+            // Update active state
+            document.querySelectorAll('#grade-type-menu .modal-filter-item').forEach(i => {
+                i.classList.remove('active');
+            });
+            item.classList.add('active');
+            
+            // Update header text
+            gradeTypeHeader.innerHTML = `<span class="filter-label">${value}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" class="filter-icon">
+                    <path d="M11.5 15a.5.5 0 0 1-.5-.5V2.707l-3.146 3.147a.5.5 0 1 1-.708-.708l4-4a.5.5 0 0 1 .708 0l4 4a.5.5 0 1 1-.708.708L12 2.707V14.5a.5.5 0 0 1-.5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"/>
+                </svg>`;
+            
+            // Close menu
+            gradeTypeMenu.classList.remove('active');
+        };
+    });
+
+    // Grade Mode Header Toggle
+    gradeModeHeader.onclick = () => {
+        gradeModeMenu.classList.toggle('active');
+        gradeTypeMenu.classList.remove('active');
+    };
+
+    // Grade Mode Items
+    document.querySelectorAll('#grade-mode-menu .modal-filter-item').forEach(item => {
+        item.onclick = (e) => {
+            const value = item.dataset.value;
+            gradeModeInput.value = value;
+            
+            // Update active state
+            document.querySelectorAll('#grade-mode-menu .modal-filter-item').forEach(i => {
+                i.classList.remove('active');
+            });
+            item.classList.add('active');
+            
+            // Update header text
+            gradeModeHeader.innerHTML = `<span class="filter-label">${value}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" class="filter-icon">
+                    <path d="M11.5 15a.5.5 0 0 1-.5-.5V2.707l-3.146 3.147a.5.5 0 1 1-.708-.708l4-4a.5.5 0 0 1 .708 0l4 4a.5.5 0 1 1-.708.708L12 2.707V14.5a.5.5 0 0 1-.5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"/>
+                </svg>`;
+            
+            // Close menu
+            gradeModeMenu.classList.remove('active');
+        };
+    });
+}
 
 // Modal Close Handlers
 document.querySelectorAll('.modal-close, .modal-cancel').forEach(btn => {
@@ -949,6 +1236,14 @@ document.addEventListener('keydown', (e) => {
 
 // Initialize app when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
+    // Empty State Card Click Handler
+    if (emptyStateContainer) {
+        const emptyStateCard = emptyStateContainer.querySelector('.empty-state-card');
+        if (emptyStateCard) {
+            emptyStateCard.addEventListener('click', openSubjectModal);
+        }
+    }
+    
     // Wait a bit longer for Supabase CDN to load
     console.log('DOM loaded, checking for Supabase...');
     console.log('window.supabase:', typeof window.supabase, window.supabase);

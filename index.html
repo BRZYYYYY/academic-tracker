@@ -100,11 +100,28 @@
             <div class="header-content">
                 <div>
                     <h1>Academic Tracker</h1>
-                    <p class="subtitle">Track your grades and academic performance</p>
+                    <p class="subtitle">Track grades and academic performance</p>
                 </div>
                 <div class="header-actions">
-                    <span class="username-display" id="username-display"></span>
-                    <button id="logout-btn" class="btn btn-secondary">Logout</button>
+                    <button id="remove-subject-btn" class="btn btn-secondary" aria-label="Remove subject">
+                        − Delete
+                    </button>
+                    <button id="add-subject-header-btn" class="btn btn-primary" aria-label="Add new subject">
+                        <span>+</span> Add
+                    </button>
+                    <div class="user-avatar-container">
+                        <button id="user-avatar-btn" class="user-avatar" aria-label="User menu">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+                            </svg>
+                        </button>
+                        <div id="user-dropdown" class="user-dropdown hidden">
+                            <div class="user-dropdown-content">
+                                <span id="dropdown-username" class="dropdown-username"></span>
+                                <button id="dropdown-logout-btn" class="btn btn-secondary btn-block">Logout</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </header>
@@ -113,18 +130,10 @@
         <!-- Dashboard View -->
         <section id="dashboard-view" class="view active">
             <div class="dashboard-header">
-                <h2>My Subjects</h2>
-                <div class="dashboard-actions">
-                    <button id="manage-subjects-btn" class="btn btn-secondary" aria-label="Manage subjects">
-                        Manage Subjects
-                    </button>
-                    <button id="add-subject-btn" class="btn btn-primary" aria-label="Add new subject">
-                        <span>+</span> Add Subject
-                    </button>
-                </div>
+                <h2>MY SUBJECTS</h2>
             </div>
-
-            <!-- Delete Selected Bar (hidden by default) -->
+            
+            <!-- Delete Selected Bar (shown when manage mode is active) -->
             <div id="delete-selected-bar" class="delete-selected-bar hidden">
                 <span id="selected-count">0 selected</span>
                 <button id="delete-selected-btn" class="btn btn-danger" aria-label="Delete selected subjects">
@@ -133,10 +142,13 @@
             </div>
             
             <!-- Subject Cards Grid -->
-            <div id="subjects-grid" class="subjects-grid">
-                <!-- Subject cards will be dynamically inserted here -->
-                <div class="empty-state">
-                    <p>No subjects yet. Click "Add Subject" to get started!</p>
+            <div id="subjects-grid" class="subjects-grid"></div>
+            
+            <!-- Empty State Placeholder -->
+            <div id="empty-state" class="empty-state-container hidden">
+                <div class="empty-state-card">
+                    <div class="empty-state-icon">+</div>
+                    <p class="empty-state-text">Add a subject</p>
                 </div>
             </div>
         </section>
@@ -144,8 +156,7 @@
         <!-- Subject Detail View -->
         <section id="detail-view" class="view">
             <div class="detail-header">
-                <button id="back-btn" class="btn btn-secondary" aria-label="Back to dashboard">
-                    ← Back
+                <button id="back-btn" class="btn btn-secondary" aria-label="Back to dashboard">←
                 </button>
                 <h2 id="subject-name-display"></h2>
                 <div class="subject-mean">
@@ -159,20 +170,37 @@
                     <span>+</span> Add Grade Item
                 </button>
                 <div class="filter-controls">
-                    <label for="filter-type">Filter by Type:</label>
-                    <select id="filter-type">
-                        <option value="all">All Types</option>
-                        <option value="Activities">Activities</option>
-                        <option value="Assignments">Assignments</option>
-                        <option value="Quizzes">Quizzes</option>
-                        <option value="Examinations">Examinations</option>
-                    </select>
-                    <label for="filter-mode">Filter by Mode:</label>
-                    <select id="filter-mode">
-                        <option value="all">All Modes</option>
-                        <option value="Written">Written</option>
-                        <option value="Online">Online</option>
-                    </select>
+                    <!-- Filter by Type -->
+                    <div class="custom-filter-group">
+                        <div class="custom-filter-header" id="filter-type-header">
+                            <span class="filter-label">Type</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" class="filter-icon">
+                                <path d="M11.5 15a.5.5 0 0 1-.5-.5V2.707l-3.146 3.147a.5.5 0 1 1-.708-.708l4-4a.5.5 0 0 1 .708 0l4 4a.5.5 0 1 1-.708.708L12 2.707V14.5a.5.5 0 0 1-.5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"/>
+                            </svg>
+                        </div>
+                        <div class="custom-filter-menu" id="filter-type-menu">
+                            <div class="custom-filter-item" data-value="all">All Types</div>
+                            <div class="custom-filter-item" data-value="Activities">Activities</div>
+                            <div class="custom-filter-item" data-value="Assignments">Assignments</div>
+                            <div class="custom-filter-item" data-value="Quizzes">Quizzes</div>
+                            <div class="custom-filter-item" data-value="Examinations">Examinations</div>
+                        </div>
+                    </div>
+
+                    <!-- Filter by Mode -->
+                    <div class="custom-filter-group">
+                        <div class="custom-filter-header" id="filter-mode-header">
+                            <span class="filter-label">Mode</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" class="filter-icon">
+                                <path d="M11.5 15a.5.5 0 0 1-.5-.5V2.707l-3.146 3.147a.5.5 0 1 1-.708-.708l4-4a.5.5 0 0 1 .708 0l4 4a.5.5 0 1 1-.708.708L12 2.707V14.5a.5.5 0 0 1-.5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"/>
+                            </svg>
+                        </div>
+                        <div class="custom-filter-menu" id="filter-mode-menu">
+                            <div class="custom-filter-item" data-value="all">All Modes</div>
+                            <div class="custom-filter-item" data-value="Written">Written</div>
+                            <div class="custom-filter-item" data-value="Online">Online</div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -192,11 +220,11 @@
             <form id="subject-form">
                 <div class="form-group">
                     <label for="subject-name">Subject Name:</label>
-                    <input type="text" id="subject-name" required placeholder="e.g., Mathematics, Science">
+                    <input type="text" id="subject-name" required placeholder="e.g. MATH031">
                 </div>
                 <div class="form-actions">
                     <button type="button" class="btn btn-secondary modal-cancel">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save Subject</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
                 </div>
             </form>
         </div>
@@ -212,39 +240,41 @@
             <form id="grade-form">
                 <div class="form-group">
                     <label for="grade-title">Title:</label>
-                    <input type="text" id="grade-title" required placeholder="e.g., Quiz 1, Midterm Exam">
+                    <input type="text" id="grade-title" required placeholder="Quiz, Midterm, etc.">
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="score-obtained">Score Obtained:</label>
+                        <label for="score-obtained">Score Got:</label>
                         <input type="number" id="score-obtained" required min="0" step="0.01" placeholder="0">
                     </div>
                     <div class="form-group">
-                        <label for="total-score">Total Possible Score:</label>
+                        <label for="total-score">Total:</label>
                         <input type="number" id="total-score" required min="0" step="0.01" placeholder="0">
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="grade-type">Type:</label>
-                    <select id="grade-type" required>
-                        <option value="">Select Type</option>
-                        <option value="Activities">Activities</option>
-                        <option value="Assignments">Assignments</option>
-                        <option value="Quizzes">Quizzes</option>
-                        <option value="Examinations">Examinations</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="grade-mode">Mode:</label>
-                    <select id="grade-mode" required>
-                        <option value="">Select Mode</option>
-                        <option value="Written">Written</option>
-                        <option value="Online">Online</option>
-                    </select>
+                <div class="form-row form-row-type-mode">
+                    <div class="form-group">
+                        <label for="grade-type">Type:</label>
+                        <select id="grade-type" required>
+                            <option value="">Select Type</option>
+                            <option value="Activities">Activities</option>
+                            <option value="Assignments">Assignments</option>
+                            <option value="Quizzes">Quizzes</option>
+                            <option value="Examinations">Examinations</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="grade-mode">Mode:</label>
+                        <select id="grade-mode" required>
+                            <option value="">Select Mode</option>
+                            <option value="Written">Written</option>
+                            <option value="Online">Online</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="form-actions">
                     <button type="button" class="btn btn-secondary modal-cancel">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save Grade Item</button>
+                    <button type="submit" class="btn btn-primary">✓</button>
                 </div>
             </form>
         </div>
