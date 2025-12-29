@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="images/icons.png" type="image/x-icon">
     <title>Academic Tracker</title>
     <link rel="stylesheet" href="styles.css">
     <!-- Supabase JavaScript Client - Using ES Module (most reliable) -->
@@ -100,15 +101,9 @@
             <div class="header-content">
                 <div>
                     <h1>Academic Tracker</h1>
-                    <p class="subtitle">Track grades and academic performance</p>
+                    <p class="subtitle"></p>
                 </div>
                 <div class="header-actions">
-                    <button id="remove-subject-btn" class="btn btn-secondary" aria-label="Remove subject">
-                        − Delete
-                    </button>
-                    <button id="add-subject-header-btn" class="btn btn-primary" aria-label="Add new subject">
-                        <span>+</span> Add
-                    </button>
                     <div class="user-avatar-container">
                         <button id="user-avatar-btn" class="user-avatar" aria-label="User menu">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
@@ -130,7 +125,15 @@
         <!-- Dashboard View -->
         <section id="dashboard-view" class="view active">
             <div class="dashboard-header">
-                <h2>MY SUBJECTS</h2>
+                <h2>My Subjects</h2>
+                <div class="dashboard-actions-right">
+                    <button id="remove-subject-btn" class="btn btn-secondary btn-small" aria-label="Remove subject">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="#e3e3e3"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm80-160h80v-360h-80v360Zm160 0h80v-360h-80v360Z"/></svg>
+                    </button>
+                    <button id="add-subject-header-btn" class="btn btn-primary btn-small" aria-label="Add new subject">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="#e3e3e3"><path d="M412-412H154v-136h258v-259h136v259h258v136H548v258H412v-258Z"/></svg>
+                    </button>
+                </div>
             </div>
             
             <!-- Delete Selected Bar (shown when manage mode is active) -->
@@ -156,7 +159,8 @@
         <!-- Subject Detail View -->
         <section id="detail-view" class="view">
             <div class="detail-header">
-                <button id="back-btn" class="btn btn-secondary" aria-label="Back to dashboard">←
+                <button id="back-btn" class="btn btn-secondary" aria-label="Back to dashboard">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="12px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M436-39-6-480l442-442 109 110-332 332 332 332L436-39Z"/></svg>
                 </button>
                 <h2 id="subject-name-display"></h2>
                 <div class="subject-mean">

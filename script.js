@@ -327,12 +327,16 @@ signupForm.addEventListener('submit', async (e) => {
 // Avatar Dropdown Toggle
 function toggleAvatarDropdown() {
     userDropdown.classList.toggle('hidden');
+    removeSubjectBtn.classList.toggle('hidden');
+    addSubjectBtn.classList.toggle('hidden');
 }
 
 // Close dropdown when clicking outside
 document.addEventListener('click', (e) => {
     if (userAvatarBtn && userDropdown && !userAvatarBtn.contains(e.target) && !userDropdown.contains(e.target)) {
         userDropdown.classList.add('hidden');
+        removeSubjectBtn.classList.remove('hidden');
+        addSubjectBtn.classList.remove('hidden');
     }
 });
 
