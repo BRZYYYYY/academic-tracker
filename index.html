@@ -99,25 +99,10 @@
     <div id="app-view" class="view" style="display: none;">
         <header class="header">
             <div class="header-content">
-                <div>
-                    <h1>Academic Tracker</h1>
-                    <p class="subtitle"></p>
-                </div>
-                <div class="header-actions">
-                    <div class="user-avatar-container">
-                        <button id="user-avatar-btn" class="user-avatar" aria-label="User menu">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
-                            </svg>
-                        </button>
-                        <div id="user-dropdown" class="user-dropdown hidden">
-                            <div class="user-dropdown-content">
-                                <span id="dropdown-username" class="dropdown-username"></span>
-                                <button id="dropdown-logout-btn" class="btn btn-secondary btn-block">Logout</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <h1 id="header-greeting">Academic Tracker</h1>
+                <button id="header-logout-btn" class="header-logout-btn" aria-label="Logout">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h280v80H200Zm440-160-55-58 102-102H360v-80h327L585-622l55-58 200 200-200 200Z"/></svg>
+                </button>
             </div>
         </header>
 
@@ -150,7 +135,9 @@
             <!-- Empty State Placeholder -->
             <div id="empty-state" class="empty-state-container hidden">
                 <div class="empty-state-card">
-                    <div class="empty-state-icon">+</div>
+                    <div class="empty-state-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M412-412H154v-136h258v-259h136v259h258v136H548v258H412v-258Z"/></svg>
+                    </div>
                     <p class="empty-state-text">Add a subject</p>
                 </div>
             </div>
@@ -171,7 +158,9 @@
 
             <div class="detail-actions">
                 <button id="add-grade-btn" class="btn btn-primary" aria-label="Add new grade item">
-                    <span>+</span> Add Grade Item
+                    <span>
+                        <svg xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M412-412H154v-136h258v-259h136v259h258v136H548v258H412v-258Z"/></svg>
+                    </span>
                 </button>
                 <div class="filter-controls">
                     <!-- Filter by Type -->
@@ -277,7 +266,7 @@
                     </div>
                 </div>
                 <div class="form-actions">
-                    <button type="button" class="btn btn-secondary modal-cancel">Cancel</button>
+                    
                     <button type="submit" class="btn btn-primary">✓</button>
                 </div>
             </form>

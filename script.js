@@ -102,10 +102,8 @@ const removeSubjectBtn = document.getElementById('remove-subject-btn');
 const deleteSelectedBtn = document.getElementById('delete-selected-btn');
 const deleteSelectedBar = document.getElementById('delete-selected-bar');
 const selectedCount = document.getElementById('selected-count');
-const userAvatarBtn = document.getElementById('user-avatar-btn');
-const userDropdown = document.getElementById('user-dropdown');
-const dropdownUsername = document.getElementById('dropdown-username');
-const dropdownLogoutBtn = document.getElementById('dropdown-logout-btn');
+const headerGreeting = document.getElementById('header-greeting');
+const headerLogoutBtn = document.getElementById('header-logout-btn');
 const emptyStateContainer = document.getElementById('empty-state');
 const backBtn = document.getElementById('back-btn');
 const subjectNameDisplay = document.getElementById('subject-name-display');
@@ -213,7 +211,7 @@ function showLogin() {
 function showApp() {
     loginView.classList.remove('active');
     appView.style.display = 'block';
-    dropdownUsername.textContent = currentUsername || 'User';
+    headerGreeting.textContent = `Welcome, ${currentUsername || 'User'}`;
     setupCustomFilters();
     loadSubjects();
 }
@@ -325,23 +323,8 @@ signupForm.addEventListener('submit', async (e) => {
 // to ensure DOM elements are available
 
 // Avatar Dropdown Toggle
-function toggleAvatarDropdown() {
-    userDropdown.classList.toggle('hidden');
-    removeSubjectBtn.classList.toggle('hidden');
-    addSubjectBtn.classList.toggle('hidden');
-}
-
-// Close dropdown when clicking outside
-document.addEventListener('click', (e) => {
-    if (userAvatarBtn && userDropdown && !userAvatarBtn.contains(e.target) && !userDropdown.contains(e.target)) {
-        userDropdown.classList.add('hidden');
-        removeSubjectBtn.classList.remove('hidden');
-        addSubjectBtn.classList.remove('hidden');
-    }
-});
-
 // Logout
-dropdownLogoutBtn.addEventListener('click', async () => {
+headerLogoutBtn.addEventListener('click', async () => {
     if (supabase) {
         await supabase.auth.signOut();
     }
@@ -666,7 +649,6 @@ function showDashboard() {
     // Show header action buttons
     removeSubjectBtn.style.display = 'inline-flex';
     addSubjectBtn.style.display = 'inline-flex';
-    userAvatarBtn.style.display = 'flex';
     loadSubjects();
 }
 
@@ -678,7 +660,6 @@ async function showSubjectDetail(subjectId) {
     // Hide header action buttons
     removeSubjectBtn.style.display = 'none';
     addSubjectBtn.style.display = 'none';
-    userAvatarBtn.style.display = 'none';
     await renderSubjectDetail(subjectId);
 }
 
@@ -791,7 +772,7 @@ function renderGradeItems(grades) {
     if (!grades || grades.length === 0) {
         gradeItemsContainer.innerHTML = `
             <div class="empty-state">
-                <p>No grade items yet. Click "Add Grade Item" to get started!</p>
+                <p>No grade items yet. Click "+" to get started!</p>
             </div>
         `;
         return;
@@ -854,7 +835,9 @@ function renderGradeItems(grades) {
                         <div class="grade-item-fraction">${item.score} / ${item.total}</div>
                     </div>
                     <div class="grade-item-actions">
-                        <button class="btn btn-danger delete-grade-item" data-item-id="${item.id}" aria-label="Delete grade item">Delete</button>
+                        <button class="btn btn-danger delete-grade-item" data-item-id="${item.id}" aria-label="Delete grade item">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="#e3e3e3"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm80-160h80v-360h-80v360Zm160 0h80v-360h-80v360Z"/></svg>
+                        </button>
                     </div>
                 </div>
             `;
@@ -977,9 +960,6 @@ async function deleteSelectedSubjects() {
 }
 
 // Event Listeners
-
-// Avatar Dropdown Toggle
-userAvatarBtn.addEventListener('click', toggleAvatarDropdown);
 
 // Add Subject
 addSubjectBtn.addEventListener('click', openSubjectModal);
