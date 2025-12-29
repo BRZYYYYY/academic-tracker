@@ -146,8 +146,8 @@
         <!-- Subject Detail View -->
         <section id="detail-view" class="view">
             <div class="detail-header">
-                <button id="back-btn" class="btn btn-secondary" aria-label="Back to dashboard">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="12px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M436-39-6-480l442-442 109 110-332 332 332 332L436-39Z"/></svg>
+                <button id="back-btn" class="back-btn" aria-label="Back to dashboard">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M359-208 86-480l273-272 88 88-121 121h422v-160h126v286H326l121 121-88 88Z"/></svg>
                 </button>
                 <h2 id="subject-name-display"></h2>
                 <div class="subject-mean">
@@ -166,9 +166,9 @@
                     <!-- Filter by Type -->
                     <div class="custom-filter-group">
                         <div class="custom-filter-header" id="filter-type-header">
-                            <span class="filter-label">Type</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" class="filter-icon">
-                                <path d="M11.5 15a.5.5 0 0 1-.5-.5V2.707l-3.146 3.147a.5.5 0 1 1-.708-.708l4-4a.5.5 0 0 1 .708 0l4 4a.5.5 0 1 1-.708.708L12 2.707V14.5a.5.5 0 0 1-.5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"/>
+                            Type
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" class="filter-chevron">
+                                <path d="M3.204 5h9.592L8 10.481 3.204 5zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204c-.86 0-1.319 1.012-.753 1.659z"/>
                             </svg>
                         </div>
                         <div class="custom-filter-menu" id="filter-type-menu">
@@ -183,9 +183,9 @@
                     <!-- Filter by Mode -->
                     <div class="custom-filter-group">
                         <div class="custom-filter-header" id="filter-mode-header">
-                            <span class="filter-label">Mode</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" class="filter-icon">
-                                <path d="M11.5 15a.5.5 0 0 1-.5-.5V2.707l-3.146 3.147a.5.5 0 1 1-.708-.708l4-4a.5.5 0 0 1 .708 0l4 4a.5.5 0 1 1-.708.708L12 2.707V14.5a.5.5 0 0 1-.5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"/>
+                            Mode
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" class="filter-chevron">
+                                <path d="M3.204 5h9.592L8 10.481 3.204 5zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204c-.86 0-1.319 1.012-.753 1.659z"/>
                             </svg>
                         </div>
                         <div class="custom-filter-menu" id="filter-mode-menu">
@@ -216,8 +216,11 @@
                     <input type="text" id="subject-name" required placeholder="e.g. MATH031">
                 </div>
                 <div class="form-actions">
-                    <button type="button" class="btn btn-secondary modal-cancel">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M840-680v480q0 33-23.5 56.5T760-120H200q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h480l160 160ZM480-240q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35ZM240-560h360v-160H240v160Z"/></svg>
+
+                    </button>
                 </div>
             </form>
         </div>
@@ -267,7 +270,9 @@
                 </div>
                 <div class="form-actions">
                     
-                    <button type="submit" class="btn btn-primary">✓</button>
+                    <button type="submit" class="btn btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M840-680v480q0 33-23.5 56.5T760-120H200q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h480l160 160ZM480-240q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35ZM240-560h360v-160H240v160Z"/></svg>
+                    </button>
                 </div>
             </form>
         </div>

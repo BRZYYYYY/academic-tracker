@@ -324,6 +324,31 @@ html {
     height: 24px;
 }
 
+/* Back Button - Matches Logout Button Design */
+.back-btn {
+    background: none;
+    border: none;
+    color: var(--color-text);
+    cursor: pointer;
+    padding: var(--spacing-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius);
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.back-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+}
+
+.back-btn svg {
+    width: 24px;
+    height: 24px;
+}
+
 /* User Avatar and Dropdown - REMOVED */
 
 /* Main Container */
@@ -638,14 +663,15 @@ html {
     align-items: center;
     margin-bottom: var(--spacing-xl);
     flex-wrap: wrap;
-    gap: var(--spacing-md);
+    gap: var(--spacing-lg);
 }
 
 .filter-controls {
     display: flex;
-    gap: var(--spacing-md);
+    gap: var(--spacing-lg);
     align-items: center;
     flex-wrap: wrap;
+    justify-content: flex-end;
 }
 
 /* Custom Filter Group */
@@ -654,52 +680,54 @@ html {
     display: inline-block;
 }
 
-/* Custom Filter Header (Clickable) */
+/* Custom Filter Header (Text Link Style) */
 .custom-filter-header {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: var(--spacing-sm) var(--spacing-md);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: var(--radius);
-    background-color: #2a2a2a;
-    color: var(--color-text-secondary);
-    font-size: 0.9rem;
+    gap: 6px;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background-color: transparent;
+    color: var(--color-text);
+    font-size: 0.95rem;
     font-family: Lexend, sans-serif !important;
+    font-weight: 500;
     cursor: pointer;
     user-select: none;
     transition: all 0.2s ease;
     white-space: nowrap;
+    width: auto;
 }
 
 .custom-filter-header:hover {
-    background-color: #3a3a3a;
-    border-color: rgba(255, 255, 255, 0.4);
-    color: var(--color-text);
+    background-color: transparent;
+    border-color: transparent;
+    color: var(--color-primary);
 }
 
 .custom-filter-header:active {
     transform: scale(0.98);
 }
 
-/* Filter Icon */
-.filter-icon {
-    width: 16px;
-    height: 16px;
-    color: var(--color-text-secondary);
+/* Filter Chevron Icon */
+.filter-chevron {
+    width: 14px;
+    height: 14px;
+    color: var(--color-text);
     transition: color 0.2s ease;
     flex-shrink: 0;
 }
 
-.custom-filter-header:hover .filter-icon {
-    color: var(--color-text);
+.custom-filter-header:hover .filter-chevron {
+    color: var(--color-primary);
 }
 
 /* Custom Filter Menu (Dropdown) */
 .custom-filter-menu {
     position: absolute;
     top: calc(100% + 4px);
-    left: 0;
+    right: 0;
     background-color: #1a1a1a;
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: var(--radius);
@@ -920,8 +948,10 @@ select option {
 }
 
 .btn-primary {
-    background-color: var(--color-primary);
-    color: white;
+    background: var(--glass-bg);
+    color: var(--color-text);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: var(--blur);
 }
 
 .btn-primary:hover {
@@ -1170,6 +1200,21 @@ form {
         align-items: center;
         justify-content: flex-start;
         gap: var(--spacing-sm);
+    }
+    
+    .filter-controls {
+        gap: var(--spacing-sm);
+        justify-content: flex-start;
+    }
+    
+    .custom-filter-header {
+        font-size: 0.85rem;
+        gap: 4px;
+    }
+    
+    .filter-chevron {
+        width: 12px;
+        height: 12px;
     }
     
     #add-grade-btn {
