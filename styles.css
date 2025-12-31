@@ -535,10 +535,13 @@ html {
     border-radius: var(--radius);
     padding: var(--spacing-sm) var(--spacing-md);
     min-width: 80px;
-    text-align: center;
+    min-height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-family: Lexend, sans-serif !important;
+    margin: 0;
+    text-align: center;
 }
 
 /* Neon Grade Color Classes */
@@ -637,6 +640,7 @@ html {
 .subject-mean {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: var(--spacing-sm);
     background: var(--glass-bg);
     padding: var(--spacing-md) var(--spacing-lg);
@@ -655,6 +659,8 @@ html {
     font-weight: 700;
     color: var(--color-primary);
     transition: all 0.3s ease;
+    font-family: Lexend, sans-serif !important;
+    margin: 0;
 }
 
 .detail-actions {
@@ -662,16 +668,16 @@ html {
     justify-content: space-between;
     align-items: center;
     margin-bottom: var(--spacing-xl);
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: var(--spacing-lg);
 }
 
 .filter-controls {
     display: flex;
-    gap: var(--spacing-lg);
+    gap: 1.5rem;
     align-items: center;
-    flex-wrap: wrap;
-    justify-content: flex-end;
+    flex-wrap: nowrap;
+    margin-left: auto;
 }
 
 /* Custom Filter Group */
@@ -692,7 +698,7 @@ html {
     color: var(--color-text);
     font-size: 0.95rem;
     font-family: Lexend, sans-serif !important;
-    font-weight: 500;
+    font-weight: 400;
     cursor: pointer;
     user-select: none;
     transition: all 0.2s ease;
@@ -982,12 +988,39 @@ select option {
     background-color: var(--color-danger-hover);
 }
 
-#remove-subject-btn {
-    background: var(--glass-bg);
+#add-grade-btn {
+    background: none;
     color: var(--color-text);
-    border: 1px solid var(--glass-border);
-    backdrop-filter: var(--blur);
-    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    padding: var(--spacing-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius);
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    font-family: Lexend, sans-serif !important;
+}
+
+#add-grade-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+}
+
+#remove-subject-btn {
+    background: none;
+    color: var(--color-text);
+    border: none;
+    cursor: pointer;
+    padding: var(--spacing-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius);
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    font-family: Lexend, sans-serif !important;
 }
 
 #remove-subject-btn.hidden {
@@ -995,8 +1028,8 @@ select option {
 }
 
 #remove-subject-btn:hover {
-    background: var(--glass-bg-alt);
-    border-color: var(--color-border-dark);
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
 }
 
 #remove-subject-btn.active {
@@ -1013,10 +1046,17 @@ select option {
 }
 
 #add-subject-header-btn {
-    background: var(--glass-bg);
+    background: none;
     color: var(--color-text);
-    border: 1px solid var(--glass-border);
-    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    padding: var(--spacing-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius);
+    transition: all 0.2s ease;
+    flex-shrink: 0;
     font-family: Lexend, sans-serif !important;
 }
 
@@ -1025,9 +1065,8 @@ select option {
 }
 
 #add-subject-header-btn:hover {
-    background-color: var(--color-primary-hover);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
 }
 
 /* Modal */
@@ -1150,7 +1189,7 @@ form {
 .form-group input:focus,
 .form-group select:focus {
     outline: none;
-    border-color: var(--color-primary);
+    border-color: var(--color-text-light);
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
@@ -1198,17 +1237,23 @@ form {
     .detail-actions {
         flex-direction: row;
         align-items: center;
-        justify-content: flex-start;
-        gap: var(--spacing-sm);
+        justify-content: space-between;
+        gap: var(--spacing-md);
+        flex-wrap: nowrap;
     }
     
     .filter-controls {
-        gap: var(--spacing-sm);
-        justify-content: flex-start;
+        gap: 1.5rem;
+        margin-left: auto;
+        flex-wrap: nowrap;
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
     }
     
     .custom-filter-header {
         font-size: 0.85rem;
+        font-weight: 300;
         gap: 4px;
     }
     
@@ -1218,7 +1263,6 @@ form {
     }
     
     #add-grade-btn {
-        
         width: 44px;
         height: 44px;
         padding: 0 !important;
@@ -1232,14 +1276,9 @@ form {
         margin: 0;
     }
     
-    .filter-controls {
-        flex-direction: row;
-        align-items: center;
-        flex: 1;
-        gap: var(--spacing-sm);
-    }
-    
     .custom-filter-group {
+        flex: 0 0 auto;
+        min-width: auto;
         flex: 1;
         min-width: 0;
     }
@@ -1293,6 +1332,39 @@ form {
     
     .header {
         padding: var(--spacing-lg) var(--spacing-md);
+    }
+    
+    .detail-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: var(--spacing-sm);
+        flex-wrap: nowrap;
+    }
+    
+    .filter-controls {
+        gap: 1.5rem;
+        margin-left: auto;
+        flex-wrap: nowrap;
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
+    }
+    
+    .custom-filter-group {
+        flex: 0 0 auto;
+        min-width: auto;
+    }
+    
+    .custom-filter-header {
+        font-size: 0.85rem;
+        font-weight: 300;
+        gap: 4px;
+    }
+    
+    .filter-chevron {
+        width: 12px;
+        height: 12px;
     }
     
     .modal-content {
