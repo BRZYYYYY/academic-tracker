@@ -1426,3 +1426,79 @@ form {
     }
 }
 
+/* Toast Notification Styles */
+.toast-container {
+    position: fixed;
+    bottom: var(--spacing-lg);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    pointer-events: none;
+}
+
+.toast-notification {
+    background-color: #1a1a1a;
+    border-bottom: 4px solid;
+    border-radius: 8px;
+    padding: var(--spacing-lg) var(--spacing-xl);
+    box-shadow: var(--shadow-lg);
+    font-family: Lexend, sans-serif !important;
+    font-weight: 700;
+    font-size: 1.1rem;
+    white-space: nowrap;
+    pointer-events: auto;
+    animation: toastSlideUp 0.4s ease-out;
+}
+
+@keyframes toastSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes toastFadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+}
+
+.toast-notification.fade-out {
+    animation: toastFadeOut 0.4s ease-in;
+}
+
+/* Toast color variants */
+.toast-perfect {
+    border-bottom-color: #00FFFF;
+    color: #00FFFF;
+    
+}
+
+.toast-excellent {
+    border-bottom-color: #39FF14;
+    color: #39FF14;
+    
+}
+
+.toast-good {
+    border-bottom-color: #FFFF00;
+    color: #FFFF00;
+    
+}
+
+.toast-failed {
+    border-bottom-color: #ff0000;
+    color: #ff0000;
+    
+}
+
+

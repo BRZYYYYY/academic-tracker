@@ -366,6 +366,45 @@ function calculateSubjectMean(grades) {
     return sum / percentages.length;
 }
 
+// Toast Notification System
+function showAchievementToast(percentage) {
+    const toastContainer = document.getElementById('toast-container');
+    if (!toastContainer) return;
+
+    let message = '';
+    let className = '';
+
+    if (percentage === 100) {
+        message = 'Perfect Score!';
+        className = 'toast-perfect';
+    } else if (percentage >= 90) {
+        message = 'Almost Perfect!';
+        className = 'toast-excellent';
+    } else if (percentage >= 64) {
+        message = 'Fair Score, Study More!';
+        className = 'toast-good';
+    } else {
+        message = 'You Failed!';
+        className = 'toast-failed';
+    }
+
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.className = `toast-notification ${className}`;
+    toast.textContent = message;
+
+    // Add to container
+    toastContainer.appendChild(toast);
+
+    // Auto-remove after 4 seconds
+    setTimeout(() => {
+        toast.classList.add('fade-out');
+        setTimeout(() => {
+            toast.remove();
+        }, 400); // Duration of fade-out animation
+    }, 4000);
+}
+
 // Database Operations - Subjects
 
 // Load all subjects for current user
@@ -504,6 +543,9 @@ async function createGradeItem(subjectId, name, scoreObtained, totalScore, type,
 
         // Update subject average
         await updateSubjectAverage(subjectId);
+
+        // Show achievement toast notification
+        showAchievementToast(percentage);
 
         return data;
     } catch (err) {
@@ -745,7 +787,12 @@ async function renderSubjectDetail(subjectId) {
         }
 
         subjectNameDisplay.textContent = escapeHtml(subject.name);
-        const mean = subject.current_average || 0;
+
+        // Load and render grades
+        const grades = await loadGrades(subjectId);
+        
+        // Calculate mean from loaded grades
+        const mean = calculateSubjectMean(grades);
         const gradeInfo = calculateGradeColor(mean);
         
         subjectMeanValue.textContent = gradeInfo.text;
@@ -753,8 +800,6 @@ async function renderSubjectDetail(subjectId) {
         subjectMeanValue.style.textShadow = '';
         subjectMeanValue.className = `mean-value ${gradeInfo.className}`;
 
-        // Load and render grades
-        const grades = await loadGrades(subjectId);
         renderGradeItems(grades);
         
         // Highlight active filters
