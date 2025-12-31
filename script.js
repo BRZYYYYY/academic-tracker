@@ -559,14 +559,22 @@ async function updateSubjectAverage(subjectId) {
 
 // UI Rendering
 
+// Format percentage according to the rules
+function formatPercentage(value) {
+    if (value === 100) {
+        return '100%';
+    }
+    return `${value.toFixed(1)}%`;
+}
+
 // Grade Color Calculation with Neon Effects
 function calculateGradeColor(percentage) {
     // Empty state - no grades yet
     if (percentage === 0 || percentage === null || percentage === undefined) {
         return {
             text: '-',
-            color: '#999999',
-            glowColor: 'rgba(153, 153, 153, 0)',
+            color: '#FFFFFF',
+            glowColor: 'rgba(255, 255, 255, 0)',
             className: 'grade-empty'
         };
     }
@@ -574,7 +582,7 @@ function calculateGradeColor(percentage) {
     // Clamp percentage between 0 and 100
     const grade = Math.max(0, Math.min(100, percentage));
 
-    // 100%: Neon Blue
+    // 100%: Neon Blue with glow
     if (grade === 100) {
         return {
             text: '100%',
@@ -584,43 +592,32 @@ function calculateGradeColor(percentage) {
         };
     }
 
-    // 99%: Neon Green
-    if (grade === 99) {
+    // 90% - 99%: Neon Green
+    if (grade >= 90) {
         return {
-            text: '99%',
+            text: formatPercentage(grade),
             color: '#39FF14',
             glowColor: 'rgba(57, 255, 20, 0.8)',
             className: 'grade-neon-green'
         };
     }
 
-    // 59% and below: Neon Red
-    if (grade <= 59) {
+    // 60% - 89%: Neon Yellow
+    if (grade >= 70) {
         return {
-            text: `${grade.toFixed(1)}%`,
-            color: '#FF0040',
-            glowColor: 'rgba(255, 0, 64, 0.8)',
-            className: 'grade-neon-red'
+            text: formatPercentage(grade),
+            color: '#FFFF00',
+            glowColor: 'rgba(255, 255, 0, 0.8)',
+            className: 'grade-neon-yellow'
         };
     }
 
-    // 60% to 98%: Gradient from Red to Green
-    // Linear interpolation between red and green
-    const ratio = (grade - 60) / (98 - 60); // 0 to 1
-    
-    // Red (255, 0, 64) to Green (57, 255, 20)
-    const red = Math.round(255 - (255 - 57) * ratio);
-    const green = Math.round(0 + 255 * ratio);
-    const blue = Math.round(64 - 64 * ratio);
-    
-    const color = `rgb(${red}, ${green}, ${blue})`;
-    const glowColor = `rgba(${red}, ${green}, ${blue}, 0.8)`;
-
+    // 0% - 69%: Neon Red
     return {
-        text: `${grade.toFixed(1)}%`,
-        color: color,
-        glowColor: glowColor,
-        className: 'grade-neon-gradient'
+        text: formatPercentage(grade),
+        color: '#ff0000ff',
+        glowColor: 'rgba(255, 0, 64, 0.8)',
+        className: 'grade-neon-red'
     };
 }
 
@@ -821,6 +818,9 @@ function renderGradeItems(grades) {
     // Render groups
     gradeItemsContainer.innerHTML = sortedGroups.map(group => {
         const itemsHtml = group.items.map(item => {
+            const itemPercentage = parseFloat(item.percentage);
+            const gradeInfo = calculateGradeColor(itemPercentage);
+            
             return `
                 <div class="grade-item">
                     <div class="grade-item-info">
@@ -831,7 +831,7 @@ function renderGradeItems(grades) {
                         </div>
                     </div>
                     <div class="grade-item-score">
-                        <div class="grade-item-percentage">${parseFloat(item.percentage).toFixed(1)}%</div>
+                        <div class="grade-item-percentage ${gradeInfo.className}" style="color: ${gradeInfo.color};">${gradeInfo.text}</div>
                         <div class="grade-item-fraction">${item.score} / ${item.total}</div>
                     </div>
                     <div class="grade-item-actions">

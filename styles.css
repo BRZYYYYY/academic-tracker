@@ -103,7 +103,7 @@ html {
 }
 
 .login-card h1 {
-    font-size: 3rem;
+    font-size: 2.5rem;
     font-weight: 900;
     text-transform: uppercase;
     color: var(--color-text);
@@ -529,7 +529,6 @@ html {
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--color-primary);
-    transition: all 0.3s ease;
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
     border-radius: var(--radius);
@@ -546,20 +545,33 @@ html {
 
 /* Neon Grade Color Classes */
 .grade-empty {
-    color: #999999;
+    color: #FFFFFF;
     font-weight: 600;
+    font-family: Lexend, sans-serif !important;
 }
 
 .grade-neon-blue {
     color: #00FFFF;
+    font-weight: 700;
+    font-family: Lexend, sans-serif !important;
 }
 
 .grade-neon-green {
     color: #39FF14;
+    font-weight: 700;
+    font-family: Lexend, sans-serif !important;
+}
+
+.grade-neon-yellow {
+    color: #FFFF00;
+    font-weight: 700;
+    font-family: Lexend, sans-serif !important;
 }
 
 .grade-neon-red {
     color: #FF0040;
+    font-weight: 700;
+    font-family: Lexend, sans-serif !important;
 }
 
 .subject-card-meta {
@@ -802,8 +814,8 @@ select:hover {
 
 select:focus {
     outline: none !important;
-    border-color: var(--color-primary) !important;
-    box-shadow: 0 0 0 3px rgba(202, 8, 8, 0.2) !important;
+    border-color: var(--color-border) !important;
+    box-shadow: 0 0 0 0.1px rgba(253, 253, 253, 0.2) !important;
 }
 
 select option {
@@ -886,6 +898,7 @@ select option {
     font-weight: 600;
     color: var(--color-text);
     margin-bottom: var(--spacing-xs);
+    font-family: Lexend, sans-serif !important;
 }
 
 .grade-item-details {
@@ -900,7 +913,7 @@ select option {
     display: inline-block;
     padding: 2px var(--spacing-sm);
     background: var(--glass-bg);
-    color: var(--color-text-secondary);
+    color: var(--color-secondary);
     border-radius: 4px;
     font-size: 0.8rem;
     border: 1px solid var(--glass-border);
@@ -914,6 +927,7 @@ select option {
     font-size: 1.25rem;
     font-weight: 700;
     color: var(--color-primary);
+    font-family: Lexend, sans-serif !important;
 }
 
 .grade-item-fraction {
