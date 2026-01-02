@@ -14,5 +14,6 @@ A responsive web application for students to track their grades and academic per
 ## Tech Stack
 
 - **Frontend**: HTML5, CSS3, Vanilla JavaScript
-- **Backend**: Supabase (Authentication & Database)
-- **Deployment**: Vercel (or any static hosting)
+- **Backend**: Supabase 
+- **Deployment**: Vercel 
+
