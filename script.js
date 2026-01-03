@@ -2,8 +2,7 @@
 const supabaseUrl = 'https://fyhxzwilmzhjragefkdz.supabase.co';
 const supabaseKey = 'sb_publishable_52yr6Ofav7_43NTWH1U25A_kv8Ff-Lz';
 
-// Initialize Supabase client  
-// Use var instead of let/const to avoid redeclaration errors if CDN already declared it
+// Initialize Supabase client 
 var supabase = null;
 
 // Function to initialize Supabase client
@@ -1405,3 +1404,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // Start trying to initialize after a short delay
     setTimeout(tryInit, 100);
 });
+
