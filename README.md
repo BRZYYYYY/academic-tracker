@@ -1,6 +1,6 @@
 # Academic Tracker
 
-A responsive web application for students to track their grades and academic performance.
+A websites for students to track their grades and academic performance.
 
 ## Features
 
