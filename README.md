@@ -13,10 +13,11 @@ A websites for students to track their grades and academic performance.
 
 ## Tech Stack
 
-- **Frontend**: HTML5, CSS3, Vanilla JavaScript
+- **Frontend**: HTML5, CSS3, JavaScript
 - **Backend**: Supabase 
 - **Deployment**: Vercel
 
 To be continued and upgraded to typescript.
+
 
 
