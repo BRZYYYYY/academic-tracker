@@ -4,7 +4,7 @@ A websites for students to track their grades and academic performance.
 
 ## Features
 
-- **User Authentication**: Secure login/signup system with Supabase
+- **User Authentication**: Secure login/signup system
 - **Subject Management**: Create and manage multiple subjects
 - **Grade Tracking**: Add grade items with scores, types, and modes
 - **Automatic Calculations**: Percentage and mean calculations
